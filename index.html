@@ -439,15 +439,22 @@
         .car-image {
             height: 140px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 0.5rem;
         }
         
         .car-image img {
-            max-height: 100%;
+            max-height: 110px;
             max-width: 100%;
             object-fit: contain;
+        }
+        
+        .base-price-small {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
         
         .car-price {
@@ -2143,10 +2150,11 @@
                     </div>
                     <div class="car-image">
                         <img src="${car.image}" alt="${car.name}" onerror="this.outerHTML='<div style=\\'font-size: 4rem; opacity: 0.3;\\'>🚗</div>'">
+                        <div class="base-price-small">차량 기본가 ${formatPriceMan(car.price)}원</div>
                     </div>
                     <div class="car-price">
-                        <div class="price-label">차량 기본가</div>
-                        <div class="price-value">${formatPriceMan(car.price)} <small>원</small></div>
+                        <div class="price-label">총 구입비</div>
+                        <div class="price-value" id="total-price-${car.id}">${formatPriceMan(car.price)} <small>원</small></div>
                     </div>
                     <div class="car-specs">
                         <div class="spec-row">
@@ -2317,6 +2325,12 @@
             
             // 총 구입비
             const totalPurchase = afterSubsidy + registrationTotal;
+            
+            // 상단 총 구입비 표시 업데이트
+            const topPriceEl = document.getElementById(`total-price-${carId}`);
+            if (topPriceEl) {
+                topPriceEl.innerHTML = `${formatPriceMan(totalPurchase)} <small>원</small>`;
+            }
             
             // 유지비 (연간) - EV vs HEV 분기
             let annualFuel = 0;
