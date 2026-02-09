@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전기차/하이브리드 비교</title>
+    <link href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #13131a;
+            --border: #2a2a3a;
+            --accent: #00d4aa;
+            --accent2: #7c3aed;
+            --text: #e4e4e7;
+            --text-muted: #71717a;
+            --positive: #22c55e;
+            --negative: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Pretendard Variable', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--card) 0%, #1a1a2e 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+        
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #00b894);
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+        
+        /* Global Settings Panel */
+        .global-settings {
+            background: linear-gradient(135deg, #1a1a2e 0%, var(--card) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+        }
+        
+        .settings-content {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .settings-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+        
+        .setting-item label {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+        
+        .setting-item select,
+        .setting-item input {
+            padding: 0.625rem 0.875rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+        
+        .setting-item select:focus,
+        .setting-item input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .checkbox-item {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+        
+        .checkbox-item label {
+            color: var(--text);
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+            background: var(--card);
+            padding: 0.25rem;
+            border-radius: 10px;
+            width: fit-content;
+        }
+        
+        .tab {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .tab:hover:not(.active) {
+            color: var(--text);
+        }
+        
+        /* Hidden Cars Bar */
+        .hidden-cars-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .hidden-cars-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        
+        .hidden-cars-icons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .hidden-car-icon {
+            width: 60px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hidden-car-icon:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        .hidden-car-icon img {
+            width: 50px;
+            height: 28px;
+            object-fit: contain;
+        }
+        
+        .hidden-car-icon .car-name-mini {
+            font-size: 0.5rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding: 0 2px;
+        }
+        
+        .hidden-car-icon .restore-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #000;
+        }
+        
+        /* Hide Button */
+        .hide-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+        
+        .car-card:hover .hide-btn {
+            opacity: 1;
+        }
+        
+        .hide-btn:hover {
+            background: var(--negative);
+            color: white;
+        }
+        
+        /* Car Grid */
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+        
+        .car-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .car-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 212, 170, 0.15);
+        }
+        
+        .car-header {
+            padding: 1.25rem;
+            background: linear-gradient(180deg, rgba(0, 212, 170, 0.05) 0%, transparent 100%);
+            position: relative;
+        }
+        
+        .car-brand {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.375rem;
+        }
+        
+        .car-name {
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .car-trim {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+        
+        .fuel-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .fuel-badge.ev {
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--accent);
+        }
+        
+        .fuel-badge.hev {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        
+        .car-image {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+        
+        .car-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        
+        .car-price {
+            padding: 1rem 1.25rem;
+            background: rgba(0, 212, 170, 0.08);
+            border-top: 1px solid var(--border);
+        }
+        
+        .price-label {
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        
+        .price-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .price-value small {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        
+        .car-specs {
+            padding: 1.25rem;
+        }
+        
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+        
+        .spec-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .spec-value.best {
+            color: var(--positive);
+        }
+        
+        .spec-value.worst {
+            color: var(--negative);
+        }
+        
+        /* Options Section */
+        .car-options {
+            padding: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .options-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.5rem 0;
+            font-size: 0.8125rem;
+        }
+        
+        .option-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+        }
+        
+        .option-name {
+            flex: 1;
+        }
+        
+        .option-price {
+            color: var(--warning);
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+        
+        .option-hidden {
+            display: none;
+        }
+        
+        .options-toggle {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .options-toggle:hover {
+            background: rgba(0, 212, 170, 0.2);
+        }
+        
+        .subsidy-warning {
+            color: var(--warning);
+        }
+        
+        /* 할인 조건 스타일 */
+        .discount-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .discount-category {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .discount-category:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .discount-category-name {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 4px;
+        }
+        
+        .discount-item {
+            padding: 0.375rem 0;
+        }
+        
+        .discount-summary {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            background: rgba(198, 40, 40, 0.1);
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--negative);
+            text-align: center;
+        }
+        
+        /* Calculated Results */
+        .car-result {
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+            border-top: 1px solid var(--border);
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.375rem 0;
+        }
+        
+        .result-label {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+        
+        .result-value {
+            font-weight: 600;
+        }
+        
+        .result-total {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .result-total .result-label {
+            font-size: 0.9375rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        .result-total .result-value {
+            font-size: 1.25rem;
+            color: var(--accent);
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Comparison Table */
+        .comparison-section {
+            margin-top: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+        
+        .comparison-table th {
+            background: rgba(0, 212, 170, 0.1);
+            font-weight: 600;
+            color: var(--accent);
+            position: sticky;
+            left: 0;
+            min-width: 140px;
+        }
+        
+        .comparison-table td {
+            min-width: 160px;
+        }
+        
+        .comparison-table tr:last-child th,
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        /* Features List */
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+        
+        .feature-tag {
+            padding: 0.25rem 0.625rem;
+            background: rgba(0, 212, 170, 0.1);
+            border-radius: 4px;
+            font-size: 0.6875rem;
+            color: var(--accent);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent);
+            color: #000;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .car-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main {
+                padding: 1rem;
+            }
+        }
+        
+        /* Subsidy Info */
+        .subsidy-info {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            font-size: 0.8125rem;
+        }
+        
+        .subsidy-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+        }
+        
+        .subsidy-label {
+            color: var(--text-muted);
+        }
+        
+        .subsidy-value {
+            color: var(--positive);
+            font-weight: 500;
+        }
+        
+        /* Size Comparison */
+        .size-controls {
+            margin-bottom: 1.5rem;
+        }
+        
+        .size-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .size-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .size-checkbox-item:hover {
+            border-color: var(--accent);
+        }
+        
+        .size-checkbox-item.selected {
+            border-color: var(--accent);
+            background: rgba(0, 212, 170, 0.1);
+        }
+        
+        .size-checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+        
+        .size-checkbox-item img {
+            width: 60px;
+            height: 35px;
+            object-fit: contain;
+        }
+        
+        .size-checkbox-item .car-label {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .size-compare-container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .size-canvas-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            background: linear-gradient(180deg, #1a1a2e 0%, #13131a 100%);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        #sizeCanvas {
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .size-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        
+        .size-info {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🚗</div>
+                <h1>EV/HEV 비교</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="resetAll()">
+                    <span>↺</span> 초기화
+                </button>
+                <button class="btn btn-primary" onclick="saveSettings()">
+                    <span>💾</span> 저장
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <section class="global-settings">
+        <div class="settings-content">
+            <div class="settings-title">
+                <span>⚙️</span> 공통 설정 (한 번 입력하면 전체 적용)
+            </div>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label>시/도</label>
+                    <select id="region1" onchange="updateSubsidy()">
+                        <option value="">선택</option>
+                        <option value="서울">서울특별시</option>
+                        <option value="부산">부산광역시</option>
+                        <option value="대구">대구광역시</option>
+                        <option value="인천">인천광역시</option>
+                        <option value="광주">광주광역시</option>
+                        <option value="대전">대전광역시</option>
+                        <option value="울산">울산광역시</option>
+                        <option value="세종">세종특별자치시</option>
+                        <option value="경기">경기도</option>
+                        <option value="강원">강원도</option>
+                        <option value="충북">충청북도</option>
+                        <option value="충남">충청남도</option>
+                        <option value="전북">전라북도</option>
+                        <option value="전남">전라남도</option>
+                        <option value="경북" selected>경상북도</option>
+                        <option value="경남">경상남도</option>
+                        <option value="제주">제주특별자치도</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>시/군/구</label>
+                    <select id="region2" onchange="updateSubsidy()">
+                        <option value="">선택</option>
+                        <option value="상주시" selected>상주시</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>다자녀 감면</label>
+                    <select id="multiChild" onchange="updateAllCalc()">
+                        <option value="0">해당없음</option>
+                        <option value="2" selected>2자녀 (취득세 50%, 최대140만)</option>
+                        <option value="3">3자녀+ (취득세 면제, 최대200만)</option>
+                    </select>
+                </div>
+                <div class="setting-item checkbox-item">
+                    <input type="checkbox" id="disability" onchange="updateAllCalc()">
+                    <label for="disability">장애인 감면</label>
+                </div>
+                <div class="setting-item">
+                    <label>연간 주행거리</label>
+                    <select id="yearMileage" onchange="updateAllCalc()">
+                        <option value="10000">10,000 km</option>
+                        <option value="15000" selected>15,000 km</option>
+                        <option value="20000">20,000 km</option>
+                        <option value="25000">25,000 km</option>
+                        <option value="30000">30,000 km</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>보유 기간</label>
+                    <select id="ownershipYears" onchange="updateAllCalc()">
+                        <option value="3" selected>3년</option>
+                        <option value="5">5년</option>
+                        <option value="7">7년</option>
+                        <option value="10">10년</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>휘발유 가격 (원/ℓ)</label>
+                    <input type="number" id="gasPrice" value="1650" min="1000" max="3000" step="10" onchange="updateAllCalc()" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-dark); color: var(--text);">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <main class="main">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('summary')">요약 비교</button>
+            <button class="tab" onclick="showTab('specs')">상세 제원</button>
+            <button class="tab" onclick="showTab('features')">사양 비교</button>
+            <button class="tab" onclick="showTab('size')">📐 크기 비교</button>
+        </div>
+        
+        <div id="tab-summary" class="tab-content active">
+            <!-- 숨긴 차량 아이콘 모음 -->
+            <div class="hidden-cars-bar" id="hiddenCarsBar" style="display: none;">
+                <span class="hidden-cars-label">숨긴 차량:</span>
+                <div class="hidden-cars-icons" id="hiddenCarsIcons">
+                    <!-- 숨긴 차량 아이콘들 -->
+                </div>
+            </div>
+            <div class="car-grid" id="carGrid">
+                <!-- Cars will be rendered here -->
+            </div>
+        </div>
+        
+        <div id="tab-specs" class="tab-content">
+            <div class="comparison-section">
+                <h3 class="section-title">📊 상세 제원 비교</h3>
+                <div class="table-wrapper">
+                    <table class="comparison-table" id="specsTable">
+                        <!-- Specs table will be rendered here -->
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab-features" class="tab-content">
+            <div class="comparison-section">
+                <h3 class="section-title">🎯 사양 비교</h3>
+                <div class="table-wrapper">
+                    <table class="comparison-table" id="featuresTable">
+                        <!-- Features table will be rendered here -->
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab-size" class="tab-content">
+            <div class="comparison-section">
+                <h3 class="section-title">📐 실제 비율 크기 비교</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
+                    비교할 차량을 선택하세요. 리어 휠 센터를 기준으로 정렬됩니다.
+                </p>
+                
+                <div class="size-controls">
+                    <div class="size-checkboxes" id="sizeCheckboxes">
+                        <!-- Checkboxes will be rendered here -->
+                    </div>
+                </div>
+                
+                <div class="size-compare-container">
+                    <div class="size-canvas-wrapper">
+                        <canvas id="sizeCanvas" width="900" height="400"></canvas>
+                    </div>
+                    <div class="size-legend" id="sizeLegend">
+                        <!-- Legend will be rendered here -->
+                    </div>
+                </div>
+                
+                <div class="size-specs-table">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--accent);">📏 치수 비교표</h4>
+                    <div class="table-wrapper">
+                        <table class="comparison-table" id="sizeSpecsTable">
+                            <!-- Size specs table will be rendered here -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="toast" id="toast">설정이 저장되었습니다!</div>
+
+    <script>
+        // 상주시 2026년 전기차 보조금 데이터 (엑셀 기준)
+        const subsidyData = {
+            "EV4 롱레인지 2WD": { national: 5550000, local: 5710000, total: 11260000 },
+            "EV5 롱레인지 2WD": { national: 5520000, local: 5680000, total: 11200000 },
+            "Model 3 Premium": { national: 4200000, local: 4320000, total: 8520000 },
+            "EV6 롱레인지 2WD": { national: 5700000, local: 5870000, total: 11570000 },
+            "아이오닉6 롱레인지 2WD": { national: 5700000, local: 5870000, total: 11570000 },
+            "ID.4 Pro": { national: 4320000, local: 4440000, total: 8760000 }
+        };
+        
+        // 차량 데이터
+        const cars = [
+            {
+                id: 1,
+                name: "EV4",
+                brand: "기아",
+                lineup: "2026년형 전기 (롱레인지)",
+                trim: "어스 2WD A/T",
+                fuelType: "EV",
+                image: "data:image/png;base64,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",
+                color: "#7ED957",
+                subsidyKey: "EV4 롱레인지 2WD",
+                price: 49210000,
+                basePrice: 51070000,
+                evDiscount: 1860000,
+                nationalSubsidy: 5550000,
+                localSubsidy: 5710000,
+                sizeData: { length: 4730, width: 1860, height: 1480, wheelbase: 2820, rearOverhang: 955 },
+                specs: {
+                    "차종": "준중형",
+                    "출시일": "2026.02.02",
+                    "복합 연비": "5.8 km/kWh",
+                    "주행거리": "533 km",
+                    "배터리 용량": "81.4 kWh",
+                    "모터 출력": "204 ps",
+                    "공차중량": "1,835 kg",
+                    "전장": "4,730 mm",
+                    "전폭": "1,860 mm",
+                    "전고": "1,480 mm",
+                    "축간거리": "2,820 mm",
+                    "굴림방식": "FF",
+                    "서스펜션(전)": "맥퍼슨 스트럿",
+                    "서스펜션(후)": "멀티링크"
+                },
+                features: {
+                    "안전": ["에어백 6개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "전동 사이드미러", "차음 유리"],
+                    "내장": ["가죽 스티어링", "열선 핸들", "디지털 계기판", "엠비언트 라이트"],
+                    "시트": ["바이오 인조가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["스마트 크루즈", "전자식 주차브레이크", "스마트 트렁크", "무선충전"]
+                },
+                options: [
+                    {id: "o1_1", name: "스노우 화이트 펄", price: 80000},
+                    {id: "o1_2", name: "아이보리 매트 실버", price: 300000},
+                    {id: "o1_3", name: "요트 매트 블루", price: 300000},
+                    {id: "o1_4", name: "19인치 휠+타이어", price: 480000, wheelSize: 19},
+                    {id: "o1_5", name: "드라이브 와이즈", price: 1260000},
+                    {id: "o1_6", name: "유틸리티 (V2L)", price: 390000},
+                    {id: "o1_7", name: "와이드 선루프", price: 630000},
+                    {id: "o1_8", name: "하만카돈 프리미엄 사운드", price: 630000},
+                    {id: "o1_9", name: "빌트인 캠 2 플러스", price: 440000},
+                    {id: "o1_10", name: "헤드업 디스플레이", price: 580000}
+                ]
+            },
+            {
+                id: 2,
+                name: "EV5",
+                brand: "기아",
+                lineup: "2026년형 전기 (롱레인지)",
+                trim: "어스 2WD A/T",
+                fuelType: "EV",
+                image: "data:image/png;base64,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",
+                color: "#CCCCCC",
+                subsidyKey: "EV5 롱레인지 2WD",
+                price: 49500000,
+                basePrice: 51370000,
+                evDiscount: 1870000,
+                nationalSubsidy: 5520000,
+                localSubsidy: 5680000,
+                sizeData: { length: 4610, width: 1875, height: 1680, wheelbase: 2750, rearOverhang: 930 },
+                specs: {
+                    "차종": "중형SUV",
+                    "출시일": "2026.01.22",
+                    "복합 연비": "5.0 km/kWh",
+                    "주행거리": "460 km",
+                    "배터리 용량": "81.4 kWh",
+                    "모터 출력": "218 ps",
+                    "공차중량": "1,995 kg",
+                    "전장": "4,610 mm",
+                    "전폭": "1,875 mm",
+                    "전고": "1,680 mm",
+                    "축간거리": "2,750 mm",
+                    "굴림방식": "FF",
+                    "서스펜션(전)": "맥퍼슨 스트럿",
+                    "서스펜션(후)": "멀티링크"
+                },
+                features: {
+                    "안전": ["에어백 6개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "전동 사이드미러", "차음 유리"],
+                    "내장": ["가죽 스티어링", "열선 핸들", "디지털 계기판", "엠비언트 라이트"],
+                    "시트": ["프리미엄 인조가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["스마트 크루즈", "전자식 주차브레이크", "스마트 트렁크", "무선충전"]
+                },
+                options: [
+                    {id: "o2_1", name: "스노우 화이트 펄", price: 80000},
+                    {id: "o2_2", name: "아이스버그 매트 그린", price: 300000},
+                    {id: "o2_3", name: "컴포트 II", price: 680000},
+                    {id: "o2_4", name: "19인치 휠+타이어", price: 300000, wheelSize: 19},
+                    {id: "o2_5", name: "스마트 커넥트", price: 730000},
+                    {id: "o2_6", name: "모니터링", price: 1360000},
+                    {id: "o2_7", name: "드라이브 와이즈", price: 1320000},
+                    {id: "o2_8", name: "파노라마 선루프", price: 1070000},
+                    {id: "o2_9", name: "하만카돈 프리미엄 사운드", price: 630000},
+                    {id: "o2_10", name: "빌트인 캠 2 플러스", price: 440000}
+                ]
+            },
+            {
+                id: 3,
+                name: "Model 3",
+                brand: "테슬라",
+                lineup: "2026년형 전기",
+                trim: "Premium A/T",
+                fuelType: "EV",
+                image: "data:image/png;base64,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",
+                color: "#E53935",
+                subsidyKey: "Model 3 Premium",
+                price: 52990000,
+                basePrice: 52990000,
+                evDiscount: 0,
+                nationalSubsidy: 4200000,
+                localSubsidy: 4320000,
+                sizeData: { length: 4720, width: 1935, height: 1440, wheelbase: 2875, rearOverhang: 922 },
+                specs: {
+                    "차종": "중형",
+                    "출시일": "2026.01.17",
+                    "복합 연비": "5.4 km/kWh",
+                    "주행거리": "538 km",
+                    "배터리 용량": "89.3 kWh",
+                    "모터 출력": "283 ps",
+                    "공차중량": "1,825 kg",
+                    "전장": "4,720 mm",
+                    "전폭": "1,935 mm",
+                    "전고": "1,440 mm",
+                    "축간거리": "2,875 mm",
+                    "굴림방식": "RR",
+                    "서스펜션(전)": "더블 위시본",
+                    "서스펜션(후)": "멀티링크",
+                    "제로백": "5.2초"
+                },
+                features: {
+                    "안전": ["에어백 4개", "ABS", "전방 충돌 경고", "차선 이탈 경고", "사각지대 경고"],
+                    "외장": ["LED 헤드램프", "선루프", "전동 사이드미러", "자동디밍 미러"],
+                    "내장": ["열선 핸들", "전동 조절", "디지털 계기판", "엠비언트 라이트"],
+                    "시트": ["가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["오토파일럿", "전자식 주차브레이크", "전동 트렁크", "뒷좌석 모니터"]
+                },
+                options: [
+                    {id: "o3_1", name: "Pearl White Multi-Coat", price: 1286000},
+                    {id: "o3_2", name: "Marine Blue", price: 1929000},
+                    {id: "o3_3", name: "Diamond Black", price: 1929000},
+                    {id: "o3_4", name: "Ultra Red", price: 2759000},
+                    {id: "o3_5", name: "Quicksilver", price: 2759000},
+                    {id: "o3_6", name: "19인치 노바 휠", price: 1929000, wheelSize: 19},
+                    {id: "o3_7", name: "Black+White 인테리어", price: 1286000},
+                    {id: "o3_8", name: "향상된 오토파일럿", price: 4522000},
+                    {id: "o3_9", name: "풀 셀프 드라이빙(감독형)", price: 9043000}
+                ]
+            },
+            {
+                id: 4,
+                name: "EV6",
+                brand: "기아",
+                lineup: "2026년형 전기 (롱레인지)",
+                trim: "어스 2WD A/T",
+                image: "data:image/png;base64,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",
+                color: "#BDBDBD",
+                subsidyKey: "EV6 롱레인지 2WD",
+                price: 56400000,
+                basePrice: 58530000,
+                evDiscount: 2130000,
+                nationalSubsidy: 5700000,
+                localSubsidy: 5870000,
+                sizeData: { length: 4695, width: 1880, height: 1550, wheelbase: 2900, rearOverhang: 897 },
+                specs: {
+                    "차종": "중형SUV",
+                    "출시일": "2026.01.22",
+                    "복합 연비": "5.2 km/kWh",
+                    "주행거리": "494 km",
+                    "배터리 용량": "84.0 kWh",
+                    "모터 출력": "229 ps",
+                    "공차중량": "1,985 kg",
+                    "전장": "4,695 mm",
+                    "전폭": "1,880 mm",
+                    "전고": "1,550 mm",
+                    "축간거리": "2,900 mm",
+                    "굴림방식": "RR",
+                    "서스펜션(전)": "맥퍼슨 스트럿",
+                    "서스펜션(후)": "멀티링크"
+                },
+                features: {
+                    "안전": ["에어백 7개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동", "후측방 충돌방지"],
+                    "외장": ["LED 헤드램프", "LED 안개등", "LED 주간등", "차음 유리(전체)"],
+                    "내장": ["HUD", "가죽 스티어링", "전동 조절", "디지털 계기판", "엠비언트 라이트"],
+                    "시트": ["바이오 인조가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["스마트 크루즈", "고속도로 주행보조", "어라운드뷰", "리모트 파킹"]
+                },
+                options: [
+                    {id: "o4_1", name: "스노우 화이트 펄", price: 80000},
+                    {id: "o4_2", name: "문스케이프 매트 그레이", price: 300000},
+                    {id: "o4_3", name: "아이보리 매트 실버", price: 300000},
+                    {id: "o4_4", name: "드라이브 와이즈", price: 640000},
+                    {id: "o4_5", name: "메리디안 프리미엄 사운드", price: 980000},
+                    {id: "o4_6", name: "와이드 선루프", price: 630000},
+                    {id: "o4_7", name: "빌트인 캠 2", price: 440000},
+                    {id: "o4_8", name: "스마트 커넥트", price: 690000},
+                    {id: "o4_9", name: "20인치 휠+타이어 ⚠️보조금↓23만", price: 390000, wheelSize: 20, subsidyChange: {national: 5590000, local: 5750000}},
+                    {id: "o4_10", name: "[KGA] LED 라이팅 패키지", price: 280000}
+                ]
+            },
+            {
+                id: 5,
+                name: "아이오닉 6",
+                brand: "현대",
+                lineup: "2026년형 전기 (롱레인지)",
+                trim: "프레스티지 2WD A/T",
+                image: "data:image/png;base64,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",
+                color: "#F5F5F5",
+                subsidyKey: "아이오닉6 롱레인지 2WD",
+                price: 59730000,
+                basePrice: 61980000,
+                evDiscount: 2250000,
+                nationalSubsidy: 5700000,
+                localSubsidy: 5870000,
+                sizeData: { length: 4925, width: 1880, height: 1495, wheelbase: 2950, rearOverhang: 987 },
+                specs: {
+                    "차종": "중형",
+                    "출시일": "2025.07.28",
+                    "복합 연비": "6.0 km/kWh",
+                    "주행거리": "562 km",
+                    "배터리 용량": "84.0 kWh",
+                    "모터 출력": "229 ps",
+                    "공차중량": "1,925 kg",
+                    "전장": "4,925 mm",
+                    "전폭": "1,880 mm",
+                    "전고": "1,495 mm",
+                    "축간거리": "2,950 mm",
+                    "굴림방식": "RR",
+                    "서스펜션(전)": "맥퍼슨 스트럿",
+                    "서스펜션(후)": "멀티링크"
+                },
+                features: {
+                    "안전": ["에어백 4개", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동", "후측방 충돌방지", "주행 조향 보조"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "차음 유리(전체)", "자외선 차단유리"],
+                    "내장": ["HUD", "가죽 스티어링", "열선 핸들", "디지털 계기판", "엠비언트 라이트"],
+                    "시트": ["천연가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["스마트 크루즈", "고속도로 주행보조", "어라운드뷰", "리모트 파킹"]
+                },
+                options: [
+                    {id: "o5_1", name: "세레니티 화이트 펄", price: 80000},
+                    {id: "o5_2", name: "그래비티 골드 매트", price: 200000},
+                    {id: "o5_3", name: "트랜스미션 블루 매트", price: 200000},
+                    {id: "o5_4", name: "빌트인 캠 2 Plus", price: 590000},
+                    {id: "o5_5", name: "와이드 선루프", price: 630000},
+                    {id: "o5_6", name: "20인치 휠 + 피렐리 타이어", price: 580000, wheelSize: 20},
+                    {id: "o5_7", name: "디지털 사이드 미러", price: 1360000},
+                    {id: "o5_8", name: "하이테크 플러스", price: 940000},
+                    {id: "o5_9", name: "[HGA] 차량 보호 필름Ⅰ", price: 370000},
+                    {id: "o5_10", name: "[HGA] 차량 보호 필름Ⅱ", price: 390000}
+                ]
+            },
+            {
+                id: 6,
+                name: "ID.4",
+                brand: "폭스바겐",
+                lineup: "2026년형 전기",
+                trim: "Pro A/T",
+                image: "data:image/png;base64,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",
+                color: "#1565C0",
+                subsidyKey: "ID.4 Pro",
+                price: 60410000,
+                basePrice: 60407000,
+                evDiscount: 0,
+                nationalSubsidy: 4320000,
+                localSubsidy: 4440000,
+                sizeData: { length: 4585, width: 1850, height: 1615, wheelbase: 2765, rearOverhang: 910 },
+                specs: {
+                    "차종": "중형SUV",
+                    "출시일": "2026.01.02",
+                    "복합 연비": "4.9 km/kWh",
+                    "주행거리": "424 km",
+                    "배터리 용량": "82.0 kWh",
+                    "모터 출력": "286 ps",
+                    "공차중량": "2,165 kg",
+                    "전장": "4,585 mm",
+                    "전폭": "1,850 mm",
+                    "전고": "1,615 mm",
+                    "축간거리": "2,765 mm",
+                    "굴림방식": "RR",
+                    "서스펜션(전)": "맥퍼슨 스트럿",
+                    "서스펜션(후)": "멀티링크",
+                    "제로백": "6.7초"
+                },
+                features: {
+                    "안전": ["에어백 4개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "사각지대 경고", "주행 조향 보조"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "글라스 루프", "후방 와이퍼"],
+                    "내장": ["가죽 스티어링", "열선 핸들", "디지털 계기판", "엠비언트 라이트"],
+                    "시트": ["인조가죽", "열선(앞)", "전동시트", "메모리시트", "안마기능"],
+                    "편의": ["스마트 크루즈", "전자식 주차브레이크", "스마트 트렁크", "어라운드뷰"]
+                },
+                options: [] // ID.4 Pro는 옵션 없이 단일 구성
+            },
+            // === HEV 차량 ===
+            {
+                id: 7,
+                name: "그랜저 HEV",
+                brand: "현대",
+                lineup: "2026년형 가솔린 터보 1.6 하이브리드",
+                trim: "캘리그래피 A/T",
+                fuelType: "HEV",
+                image: "data:image/png;base64,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",
+                color: "#4A148C",
+                price: 52660000,
+                basePrice: 53660000,
+                hevDiscount: 1000000,
+                displacement: 1598,
+                fuelEfficiency: 16.7,
+                fuelTank: 50,
+                sizeData: { length: 5035, width: 1880, height: 1460, wheelbase: 2895, rearOverhang: 1070 },
+                specs: {
+                    "차종": "준대형",
+                    "출시일": "2025.05.21",
+                    "복합 연비": "16.7 km/ℓ",
+                    "주행거리": "835 km",
+                    "배기량": "1,598 cc",
+                    "엔진 출력": "180 ps",
+                    "공차중량": "1,715 kg",
+                    "전장": "5,035 mm",
+                    "전폭": "1,880 mm",
+                    "전고": "1,460 mm",
+                    "축간거리": "2,895 mm",
+                    "굴림방식": "FF",
+                    "변속기": "자동 6단"
+                },
+                features: {
+                    "안전": ["에어백 7개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동", "후측방 충돌 방지"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "전동 사이드미러", "차음 유리(전체)"],
+                    "내장": ["HUD", "디지털 계기판", "가죽 스티어링", "열선 핸들", "엠비언트 라이트"],
+                    "시트": ["나파가죽", "열선/통풍(앞)", "전동시트", "메모리시트", "쿠션 익스텐션"],
+                    "편의": ["스마트 크루즈", "전자식 주차브레이크", "전동 트렁크", "무선충전", "BOSE 사운드"]
+                },
+                options: [
+                    {id: "o7_1", name: "세레니티 화이트 펄 외장컬러", price: 100000},
+                    {id: "o7_2", name: "유기 브론즈 매트 외장컬러", price: 200000},
+                    {id: "o7_3", name: "녹턴 그레이 매트 외장컬러", price: 200000},
+                    {id: "o7_4", name: "파노라마 선루프", price: 1170000},
+                    {id: "o7_5", name: "프리뷰 전자제어 서스펜션Ⅱ", price: 1270000},
+                    {id: "o7_6", name: "2열 전동식 도어커튼", price: 480000},
+                    {id: "o7_7", name: "[HGA] 차량 보호 필름", price: 440000},
+                    {id: "o7_8", name: "[HGA] 20인치 고휘도 스퍼터링 휠", price: 940000},
+                    {id: "o7_9", name: "[HGA] 빌트인 공기청정기 2.0", price: 580000},
+                    {id: "o7_10", name: "[HGA] LED 메탈 패키지", price: 530000}
+                ]
+            },
+            {
+                id: 8,
+                name: "아반떼 HEV",
+                brand: "현대",
+                lineup: "2026년형 가솔린 1.6 하이브리드",
+                trim: "인스퍼레이션 A/T",
+                fuelType: "HEV",
+                image: "data:image/png;base64,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",
+                color: "#1976D2",
+                price: 31150000,
+                basePrice: 32150000,
+                hevDiscount: 1000000,
+                displacement: 1580,
+                fuelEfficiency: 19.2,
+                fuelTank: 42,
+                sizeData: { length: 4710, width: 1825, height: 1420, wheelbase: 2720, rearOverhang: 995 },
+                specs: {
+                    "차종": "준중형",
+                    "출시일": "2025.04.15",
+                    "복합 연비": "19.2 km/ℓ",
+                    "주행거리": "806 km",
+                    "배기량": "1,580 cc",
+                    "엔진 출력": "105 ps",
+                    "공차중량": "1,370 kg",
+                    "전장": "4,710 mm",
+                    "전폭": "1,825 mm",
+                    "전고": "1,420 mm",
+                    "축간거리": "2,720 mm",
+                    "굴림방식": "FF",
+                    "변속기": "DCT 6단"
+                },
+                features: {
+                    "안전": ["에어백 6개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "후측방 충돌 방지"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "전동 사이드미러"],
+                    "내장": ["디지털 계기판", "가죽 스티어링", "열선 핸들", "엠비언트 라이트"],
+                    "시트": ["천연가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["스마트 크루즈", "전자식 주차브레이크", "스마트 트렁크", "무선충전", "BOSE 사운드"]
+                },
+                options: [
+                    {id: "o8_1", name: "선루프", price: 440000},
+                    {id: "o8_2", name: "빌트인 캠(보조배터리 포함)", price: 680000},
+                    {id: "o8_3", name: "세이지그린 인테리어 컬러", price: 150000},
+                    {id: "o8_4", name: "스노우 화이트 펄", price: 80000},
+                    {id: "o8_5", name: "스타일 패키지", price: 880000},
+                    {id: "o8_6", name: "컴포트 패키지", price: 880000},
+                    {id: "o8_7", name: "드라이브 와이즈", price: 440000},
+                    {id: "o8_8", name: "HUD + 빌트인 캠 2", price: 1070000},
+                    {id: "o8_9", name: "KRELL 프리미엄 사운드", price: 580000},
+                    {id: "o8_10", name: "스마트 커넥트", price: 300000}
+                ]
+            },
+            {
+                id: 9,
+                name: "K5 HEV",
+                brand: "기아",
+                lineup: "2026년형 가솔린 2.0 하이브리드",
+                trim: "시그니처 A/T",
+                fuelType: "HEV",
+                image: "data:image/png;base64,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",
+                color: "#00695C",
+                price: 38680000,
+                basePrice: 39680000,
+                hevDiscount: 1000000,
+                displacement: 1999,
+                fuelEfficiency: 18.8,
+                fuelTank: 50,
+                sizeData: { length: 4905, width: 1860, height: 1445, wheelbase: 2850, rearOverhang: 1028 },
+                specs: {
+                    "차종": "중형",
+                    "출시일": "2025.06.19",
+                    "복합 연비": "18.8 km/ℓ",
+                    "주행거리": "940 km",
+                    "배기량": "1,999 cc",
+                    "엔진 출력": "152 ps",
+                    "공차중량": "1,535 kg",
+                    "전장": "4,905 mm",
+                    "전폭": "1,860 mm",
+                    "전고": "1,445 mm",
+                    "축간거리": "2,850 mm",
+                    "굴림방식": "FF",
+                    "변속기": "자동 6단"
+                },
+                features: {
+                    "안전": ["에어백 7개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동", "경사로 밀림 방지"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "전동 사이드미러(후진 자동하향)", "차음 유리(3면)", "레인센서 와이퍼"],
+                    "내장": ["디지털 계기판", "가죽 스티어링", "열선 핸들", "패들 시프트", "엠비언트 라이트", "뒷좌석 측면커튼"],
+                    "시트": ["퀼팅 가죽", "열선/통풍(앞)", "전동시트(이지억세스)", "메모리시트", "요추받침"],
+                    "편의": ["스마트 크루즈", "고속도로 주행보조", "전자식 주차브레이크", "전동 트렁크", "무선충전", "자동주차보조", "리모트 컨트롤 파킹", "어라운드 뷰"]
+                },
+                options: [
+                    {id: "o9_1", name: "세레니티 화이트 펄 외장컬러", price: 80000},
+                    {id: "o9_2", name: "에어로 실버 매트 외장컬러", price: 200000},
+                    {id: "o9_3", name: "녹턴 그레이 매트 외장컬러", price: 200000},
+                    {id: "o9_4", name: "빌트인캠2 + 증강현실 내비게이션", price: 440000},
+                    {id: "o9_5", name: "파노라마 선루프", price: 1170000},
+                    {id: "o9_6", name: "BOSE 프리미엄 사운드(12스피커/외장앰프)", price: 630000},
+                    {id: "o9_7", name: "HUD", price: 580000},
+                    {id: "o9_8", name: "스마트 커넥트", price: 300000},
+                    {id: "o9_9", name: "프리뷰 전자제어 서스펜션", price: 500000},
+                    {id: "o9_10", name: "19인치 휠+타이어", price: 300000}
+                ]
+            },
+            {
+                id: 10,
+                name: "쏘나타 디 엣지 HEV",
+                brand: "현대",
+                lineup: "2026년형 가솔린 2.0 하이브리드",
+                trim: "인스퍼레이션 A/T",
+                fuelType: "HEV",
+                image: "data:image/png;base64,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",
+                color: "#BF360C",
+                price: 39790000,
+                basePrice: 40790000,
+                hevDiscount: 1000000,
+                displacement: 1999,
+                fuelEfficiency: 17.1,
+                fuelTank: 50,
+                sizeData: { length: 4910, width: 1860, height: 1445, wheelbase: 2840, rearOverhang: 1035 },
+                specs: {
+                    "차종": "중형",
+                    "출시일": "2025.09.29",
+                    "복합 연비": "17.1 km/ℓ",
+                    "주행거리": "855 km",
+                    "배기량": "1,999 cc",
+                    "엔진 출력": "152 ps",
+                    "공차중량": "1,585 kg",
+                    "전장": "4,910 mm",
+                    "전폭": "1,860 mm",
+                    "전고": "1,445 mm",
+                    "축간거리": "2,840 mm",
+                    "굴림방식": "FF",
+                    "변속기": "자동 6단"
+                },
+                features: {
+                    "안전": ["에어백 7개", "ABS", "전방 충돌 경고", "차선 이탈 방지", "보행자 긴급제동", "후측방 충돌 방지"],
+                    "외장": ["LED 헤드램프", "LED 주간등", "전동 사이드미러", "차음 유리"],
+                    "내장": ["HUD", "디지털 계기판", "가죽 스티어링", "열선 핸들", "엠비언트 라이트"],
+                    "시트": ["나파가죽", "열선/통풍(앞)", "전동시트", "메모리시트"],
+                    "편의": ["스마트 크루즈", "전자식 주차브레이크", "전동 트렁크", "무선충전", "리모트 컨트롤 파킹"]
+                },
+                options: [
+                    {id: "o10_1", name: "스노우 화이트 펄 외장컬러", price: 80000},
+                    {id: "o10_2", name: "아이보리 매트 실버 외장컬러", price: 300000},
+                    {id: "o10_3", name: "19인치 휠+타이어", price: 480000},
+                    {id: "o10_4", name: "드라이브 와이즈", price: 1260000},
+                    {id: "o10_5", name: "유틸리티", price: 390000},
+                    {id: "o10_6", name: "와이드 선루프", price: 630000},
+                    {id: "o10_7", name: "하만카돈 프리미엄 사운드", price: 630000},
+                    {id: "o10_8", name: "빌트인 캠 2 플러스", price: 440000},
+                    {id: "o10_9", name: "헤드업 디스플레이", price: 580000},
+                    {id: "o10_10", name: "애프터마켓용 컬렉션", price: 150000}
+                ]
+            }
+        ];
+        
+        // 할인 조건 데이터 (다나와 기준)
+        const discountData = {
+            1: [ // EV4
+                {id: "d1_1", name: "생산월 (10월 이전)", amount: 2000000, category: "생산월"},
+                {id: "d1_2", name: "생산월 (11월)", amount: 1500000, category: "생산월"},
+                {id: "d1_3", name: "생산월 (12월)", amount: 1000000, category: "생산월"},
+                {id: "d1_4", name: "전시차 (1~11월 생산)", amount: 1000000, category: "전시차"},
+                {id: "d1_5", name: "현금할인", amount: 200000, category: "기본"},
+                {id: "d1_6", name: "세이브오토 20만", amount: 200000, category: "카드"},
+                {id: "d1_7", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d1_8", name: "할인/금융 선택형", amount: 1500000, category: "금융"},
+                {id: "d1_9", name: "EV 충전비 지원", amount: 100000, category: "EV특별"},
+                {id: "d1_10", name: "사업자 충전지원", amount: 500000, category: "사업자"},
+                {id: "d1_11", name: "EV 계약금 지원", amount: 100000, category: "EV특별"},
+                {id: "d1_12", name: "트레이드인", amount: 700000, category: "트레이드인"},
+                {id: "d1_13", name: "법인 2~3대", amount: 300000, category: "법인"},
+                {id: "d1_14", name: "법인 4~5대", amount: 400000, category: "법인"},
+                {id: "d1_15", name: "법인 6대+", amount: 500000, category: "법인"}
+            ],
+            2: [ // EV5
+                {id: "d2_1", name: "생산월 (10월 이전)", amount: 1500000, category: "생산월"},
+                {id: "d2_2", name: "생산월 (11월)", amount: 1000000, category: "생산월"},
+                {id: "d2_3", name: "생산월 (12월)", amount: 500000, category: "생산월"},
+                {id: "d2_4", name: "전시차 (1~11월 생산)", amount: 1000000, category: "전시차"},
+                {id: "d2_5", name: "현금할인", amount: 200000, category: "기본"},
+                {id: "d2_6", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d2_7", name: "EV 충전비 지원", amount: 100000, category: "EV특별"},
+                {id: "d2_8", name: "사업자 충전지원", amount: 500000, category: "사업자"},
+                {id: "d2_9", name: "EV 계약금 지원", amount: 100000, category: "EV특별"},
+                {id: "d2_10", name: "트레이드인", amount: 700000, category: "트레이드인"},
+                {id: "d2_11", name: "M할부 이용시", amount: 1000000, category: "금융"},
+                {id: "d2_12", name: "법인 2~3대", amount: 300000, category: "법인"},
+                {id: "d2_13", name: "법인 4~5대", amount: 400000, category: "법인"},
+                {id: "d2_14", name: "법인 6대+", amount: 500000, category: "법인"}
+            ],
+            3: [], // Model 3 - 할인 없음
+            4: [ // EV6
+                {id: "d4_1", name: "생산월 (10월 이전)", amount: 4000000, category: "생산월"},
+                {id: "d4_2", name: "생산월 (11월)", amount: 3500000, category: "생산월"},
+                {id: "d4_3", name: "생산월 (12월)", amount: 3000000, category: "생산월"},
+                {id: "d4_4", name: "전시차 (1~11월 생산)", amount: 1000000, category: "전시차"},
+                {id: "d4_5", name: "현금할인", amount: 200000, category: "기본"},
+                {id: "d4_6", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d4_7", name: "EV 충전비 지원", amount: 100000, category: "EV특별"},
+                {id: "d4_8", name: "사업자 충전지원", amount: 500000, category: "사업자"},
+                {id: "d4_9", name: "EV 계약금 지원", amount: 100000, category: "EV특별"},
+                {id: "d4_10", name: "트레이드인", amount: 700000, category: "트레이드인"},
+                {id: "d4_11", name: "법인 2~3대", amount: 300000, category: "법인"},
+                {id: "d4_12", name: "법인 4~5대", amount: 400000, category: "법인"},
+                {id: "d4_13", name: "법인 6대+", amount: 500000, category: "법인"}
+            ],
+            5: [ // 아이오닉6
+                {id: "d5_1", name: "설 맞이 특별", amount: 200000, category: "기본"},
+                {id: "d5_2", name: "가족사랑 (임직원)", amount: 1000000, category: "가족사랑"},
+                {id: "d5_3", name: "가족사랑 (계열사)", amount: 1000000, category: "가족사랑"},
+                {id: "d5_4", name: "아이오닉9 수상 기념", amount: 1000000, category: "기본"},
+                {id: "d5_5", name: "생산월 (10월 이전)", amount: 2500000, category: "생산월"},
+                {id: "d5_6", name: "생산월 (11월)", amount: 1500000, category: "생산월"},
+                {id: "d5_7", name: "전시차", amount: 300000, category: "전시차"},
+                {id: "d5_8", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d5_9", name: "블루멤버스 2회", amount: 100000, category: "블루멤버스"},
+                {id: "d5_10", name: "블루멤버스 3회", amount: 200000, category: "블루멤버스"},
+                {id: "d5_11", name: "블루멤버스 4회", amount: 300000, category: "블루멤버스"},
+                {id: "d5_12", name: "블루멤버스 5회+", amount: 400000, category: "블루멤버스"},
+                {id: "d5_13", name: "트레이드인 (현대/제네시스)", amount: 1000000, category: "트레이드인"},
+                {id: "d5_14", name: "트레이드인 (타브랜드)", amount: 500000, category: "트레이드인"},
+                {id: "d5_15", name: "노후차 트레이드인", amount: 200000, category: "노후차"},
+                {id: "d5_16", name: "노후차 특별 (7년 이상)", amount: 300000, category: "노후차"},
+                {id: "d5_17", name: "EV 얼리버드", amount: 1000000, category: "EV특별"},
+                {id: "d5_18", name: "현장관리법인 (업무용)", amount: 200000, category: "법인"},
+                {id: "d5_19", name: "현장관리법인 (대표자)", amount: 500000, category: "법인"},
+                {id: "d5_20", name: "현장관리법인 (키맨)", amount: 300000, category: "법인"},
+                {id: "d5_21", name: "굿프랜드 (신규)", amount: 150000, category: "굿프랜드"},
+                {id: "d5_22", name: "굿프랜드 (기존)", amount: 100000, category: "굿프랜드"},
+                {id: "d5_23", name: "렌트사 1대", amount: 100000, category: "렌트사"},
+                {id: "d5_24", name: "렌트사 2~4대", amount: 200000, category: "렌트사"},
+                {id: "d5_25", name: "렌트사 5~9대", amount: 250000, category: "렌트사"},
+                {id: "d5_26", name: "렌트사 10대+", amount: 300000, category: "렌트사"}
+            ],
+            6: [], // ID.4 - 할인 없음
+            7: [ // 그랜저 HEV
+                {id: "d7_1", name: "설 맞이 특별", amount: 200000, category: "기본"},
+                {id: "d7_2", name: "가족사랑 (임직원)", amount: 1000000, category: "가족사랑"},
+                {id: "d7_3", name: "가족사랑 (계열사)", amount: 1000000, category: "가족사랑"},
+                {id: "d7_4", name: "생산월 (9월 이전)", amount: 3000000, category: "생산월"},
+                {id: "d7_5", name: "생산월 (10~11월)", amount: 2500000, category: "생산월"},
+                {id: "d7_6", name: "생산월 (12월)", amount: 1500000, category: "생산월"},
+                {id: "d7_7", name: "생산월 (26년1월)", amount: 1000000, category: "생산월"},
+                {id: "d7_8", name: "전시차", amount: 300000, category: "전시차"},
+                {id: "d7_9", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d7_10", name: "세이브오토 50만", amount: 500000, category: "카드"},
+                {id: "d7_11", name: "블루멤버스 2회", amount: 100000, category: "블루멤버스"},
+                {id: "d7_12", name: "블루멤버스 3회", amount: 200000, category: "블루멤버스"},
+                {id: "d7_13", name: "블루멤버스 4회", amount: 300000, category: "블루멤버스"},
+                {id: "d7_14", name: "블루멤버스 5회+", amount: 400000, category: "블루멤버스"},
+                {id: "d7_15", name: "트레이드인 (현대/제네시스)", amount: 500000, category: "트레이드인"},
+                {id: "d7_16", name: "트레이드인 (타브랜드)", amount: 300000, category: "트레이드인"},
+                {id: "d7_17", name: "노후차 트레이드인", amount: 200000, category: "노후차"},
+                {id: "d7_18", name: "현장관리법인 (업무용)", amount: 200000, category: "법인"},
+                {id: "d7_19", name: "현장관리법인 (대표자)", amount: 500000, category: "법인"},
+                {id: "d7_20", name: "현장관리법인 (키맨)", amount: 300000, category: "법인"},
+                {id: "d7_21", name: "굿프랜드 (신규)", amount: 150000, category: "굿프랜드"},
+                {id: "d7_22", name: "굿프랜드 (기존)", amount: 100000, category: "굿프랜드"}
+            ],
+            8: [ // 아반떼 HEV
+                {id: "d8_1", name: "전시차", amount: 200000, category: "전시차"},
+                {id: "d8_2", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d8_3", name: "블루멤버스 2회", amount: 100000, category: "블루멤버스"},
+                {id: "d8_4", name: "블루멤버스 3회", amount: 150000, category: "블루멤버스"},
+                {id: "d8_5", name: "블루멤버스 4회", amount: 200000, category: "블루멤버스"},
+                {id: "d8_6", name: "블루멤버스 5회+", amount: 250000, category: "블루멤버스"},
+                {id: "d8_7", name: "트레이드인 (현대/제네시스)", amount: 500000, category: "트레이드인"},
+                {id: "d8_8", name: "트레이드인 (타브랜드)", amount: 300000, category: "트레이드인"},
+                {id: "d8_9", name: "노후차 트레이드인", amount: 200000, category: "노후차"},
+                {id: "d8_10", name: "현장관리법인 (업무용)", amount: 200000, category: "법인"},
+                {id: "d8_11", name: "현장관리법인 (대표자)", amount: 500000, category: "법인"},
+                {id: "d8_12", name: "현장관리법인 (키맨)", amount: 300000, category: "법인"},
+                {id: "d8_13", name: "굿프랜드 (신규)", amount: 150000, category: "굿프랜드"},
+                {id: "d8_14", name: "굿프랜드 (기존)", amount: 100000, category: "굿프랜드"},
+                {id: "d8_15", name: "렌트사 1대", amount: 100000, category: "렌트사"},
+                {id: "d8_16", name: "렌트사 2~4대", amount: 300000, category: "렌트사"},
+                {id: "d8_17", name: "렌트사 5~9대", amount: 400000, category: "렌트사"},
+                {id: "d8_18", name: "렌트사 10대+", amount: 500000, category: "렌트사"}
+            ],
+            9: [ // K5 HEV
+                {id: "d9_1", name: "생산월 (11월 이전)", amount: 2000000, category: "생산월"},
+                {id: "d9_2", name: "생산월 (12월)", amount: 1000000, category: "생산월"},
+                {id: "d9_3", name: "전시차 (1~11월 생산)", amount: 1000000, category: "전시차"},
+                {id: "d9_4", name: "현금할인", amount: 200000, category: "기본"},
+                {id: "d9_5", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d9_6", name: "할인/금융 선택형", amount: 500000, category: "금융"},
+                {id: "d9_7", name: "사업자 충전지원", amount: 500000, category: "사업자"},
+                {id: "d9_8", name: "트레이드인 (기본)", amount: 300000, category: "트레이드인"},
+                {id: "d9_9", name: "트레이드인 (추가)", amount: 500000, category: "트레이드인"},
+                {id: "d9_10", name: "법인 2~3대", amount: 300000, category: "법인"},
+                {id: "d9_11", name: "법인 4~5대", amount: 400000, category: "법인"},
+                {id: "d9_12", name: "법인 6대+", amount: 500000, category: "법인"}
+            ],
+            10: [ // 쏘나타 HEV
+                {id: "d10_1", name: "설 맞이 특별", amount: 200000, category: "기본"},
+                {id: "d10_2", name: "가족사랑 (임직원)", amount: 500000, category: "가족사랑"},
+                {id: "d10_3", name: "가족사랑 (계열사)", amount: 500000, category: "가족사랑"},
+                {id: "d10_4", name: "생산월 (10월 이전)", amount: 2000000, category: "생산월"},
+                {id: "d10_5", name: "생산월 (11월)", amount: 1500000, category: "생산월"},
+                {id: "d10_6", name: "생산월 (12월)", amount: 1000000, category: "생산월"},
+                {id: "d10_7", name: "생산월 (26년1월)", amount: 500000, category: "생산월"},
+                {id: "d10_8", name: "전시차", amount: 200000, category: "전시차"},
+                {id: "d10_9", name: "세이브오토 30만", amount: 300000, category: "카드"},
+                {id: "d10_10", name: "블루멤버스 2회", amount: 100000, category: "블루멤버스"},
+                {id: "d10_11", name: "블루멤버스 3회", amount: 200000, category: "블루멤버스"},
+                {id: "d10_12", name: "블루멤버스 4회", amount: 300000, category: "블루멤버스"},
+                {id: "d10_13", name: "블루멤버스 5회+", amount: 400000, category: "블루멤버스"},
+                {id: "d10_14", name: "트레이드인 (현대/제네시스)", amount: 500000, category: "트레이드인"},
+                {id: "d10_15", name: "트레이드인 (타브랜드)", amount: 300000, category: "트레이드인"},
+                {id: "d10_16", name: "노후차 트레이드인", amount: 200000, category: "노후차"},
+                {id: "d10_17", name: "현장관리법인 (업무용)", amount: 200000, category: "법인"},
+                {id: "d10_18", name: "현장관리법인 (대표자)", amount: 500000, category: "법인"},
+                {id: "d10_19", name: "현장관리법인 (키맨)", amount: 300000, category: "법인"},
+                {id: "d10_20", name: "굿프랜드 (신규)", amount: 150000, category: "굿프랜드"},
+                {id: "d10_21", name: "굿프랜드 (기존)", amount: 100000, category: "굿프랜드"},
+                {id: "d10_22", name: "쏘나타 전용카드", amount: 250000, category: "카드"},
+                {id: "d10_23", name: "렌트사 1대", amount: 100000, category: "렌트사"},
+                {id: "d10_24", name: "렌트사 2~4대", amount: 300000, category: "렌트사"},
+                {id: "d10_25", name: "렌트사 5~9대", amount: 400000, category: "렌트사"},
+                {id: "d10_26", name: "렌트사 10대+", amount: 500000, category: "렌트사"}
+            ]
+        };
+        
+        // 상태 관리
+        let state = {
+            region1: "경북",
+            region2: "상주시",
+            multiChild: "2",  // 0, 2, 3
+            disability: false,
+            yearMileage: 15000,
+            ownershipYears: 3,
+            gasPrice: 1650,
+            selectedOptions: {},
+            selectedDiscounts: {},  // 선택된 할인 조건
+            hiddenCars: []  // 숨긴 차량 ID 배열
+        };
+        
+        // 초기화
+        function init() {
+            loadSettings();
+            renderCars();
+            renderHiddenCars();
+            renderSpecsTable();
+            renderFeaturesTable();
+            renderSizeCheckboxes();
+            updateAllCalc();
+        }
+        
+        // 설정 로드
+        function loadSettings() {
+            const saved = localStorage.getItem('evCompareSettings');
+            if (saved) {
+                state = {...state, ...JSON.parse(saved)};
+                
+                // UI에 반영
+                document.getElementById('region1').value = state.region1;
+                document.getElementById('region2').value = state.region2;
+                document.getElementById('multiChild').value = state.multiChild;
+                document.getElementById('disability').checked = state.disability;
+                document.getElementById('yearMileage').value = state.yearMileage;
+                document.getElementById('ownershipYears').value = state.ownershipYears;
+                document.getElementById('gasPrice').value = state.gasPrice || 1650;
+            }
+        }
+        
+        // 설정 저장
+        function saveSettings() {
+            state.region1 = document.getElementById('region1').value;
+            state.region2 = document.getElementById('region2').value;
+            state.multiChild = document.getElementById('multiChild').value;
+            state.disability = document.getElementById('disability').checked;
+            state.yearMileage = parseInt(document.getElementById('yearMileage').value);
+            state.ownershipYears = parseInt(document.getElementById('ownershipYears').value);
+            state.gasPrice = parseInt(document.getElementById('gasPrice').value) || 1650;
+            
+            // 옵션 상태 저장
+            cars.forEach(car => {
+                car.options.forEach(opt => {
+                    const checkbox = document.getElementById(opt.id);
+                    if (checkbox) {
+                        state.selectedOptions[opt.id] = checkbox.checked;
+                    }
+                });
+            });
+            
+            // 할인 상태 저장
+            Object.keys(discountData).forEach(carId => {
+                discountData[carId].forEach(d => {
+                    const checkbox = document.getElementById(d.id);
+                    if (checkbox) {
+                        state.selectedDiscounts[d.id] = checkbox.checked;
+                    }
+                });
+            });
+            
+            localStorage.setItem('evCompareSettings', JSON.stringify(state));
+            showToast('설정이 저장되었습니다!');
+        }
+        
+        // 초기화
+        function resetAll() {
+            if (confirm('모든 설정을 초기화하시겠습니까?')) {
+                localStorage.removeItem('evCompareSettings');
+                location.reload();
+            }
+        }
+        
+        // 토스트 메시지
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+        
+        // 차량 숨기기
+        function hideCar(carId) {
+            if (!state.hiddenCars.includes(carId)) {
+                state.hiddenCars.push(carId);
+                renderCars();
+                renderHiddenCars();
+                renderSpecsTable();
+                renderFeaturesTable();
+                updateAllCalc();
+            }
+        }
+        
+        // 차량 보이기
+        function showCar(carId) {
+            state.hiddenCars = state.hiddenCars.filter(id => id !== carId);
+            renderCars();
+            renderHiddenCars();
+            renderSpecsTable();
+            renderFeaturesTable();
+            updateAllCalc();
+        }
+        
+        // 숨긴 차량 아이콘 렌더링
+        function renderHiddenCars() {
+            const bar = document.getElementById('hiddenCarsBar');
+            const icons = document.getElementById('hiddenCarsIcons');
+            
+            if (!bar || !icons) return;
+            
+            if (state.hiddenCars.length === 0) {
+                bar.style.display = 'none';
+                return;
+            }
+            
+            bar.style.display = 'flex';
+            icons.innerHTML = state.hiddenCars.map(carId => {
+                const car = cars.find(c => c.id === carId);
+                if (!car) return '';
+                const imgHtml = car.image 
+                    ? `<img src="${car.image}" alt="${car.name}">`
+                    : `<span style="font-size:1.2rem;opacity:0.5;">🚗</span>`;
+                return `
+                    <div class="hidden-car-icon" onclick="showCar(${car.id})" title="${car.name} ${car.trim} - 클릭하여 복원">
+                        ${imgHtml}
+                        <span class="car-name-mini">${car.name}</span>
+                        <span class="restore-badge">+</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 탭 전환
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+        
+        // 옵션 펼치기/접기
+        function toggleOptions(carId) {
+            const hiddenOptions = document.querySelectorAll(`.option-item.option-hidden[data-car="${carId}"]`);
+            const toggleText = document.getElementById(`toggle-text-${carId}`);
+            const isHidden = hiddenOptions[0]?.style.display !== 'flex';
+            
+            hiddenOptions.forEach(opt => {
+                opt.style.display = isHidden ? 'flex' : 'none';
+            });
+            
+            const car = cars.find(c => c.id === carId);
+            if (isHidden) {
+                toggleText.textContent = '접기';
+            } else {
+                toggleText.textContent = `+ ${car.options.length - 5}개 더보기`;
+            }
+        }
+        
+        // 할인 목록 펼치기/접기
+        function toggleDiscounts(carId) {
+            const list = document.getElementById(`discount-list-${carId}`);
+            const toggle = document.getElementById(`discount-toggle-${carId}`);
+            if (!list) return;
+            
+            if (list.style.display === 'none') {
+                list.style.display = 'block';
+                toggle.textContent = '▲';
+            } else {
+                list.style.display = 'none';
+                toggle.textContent = '▼';
+            }
+        }
+        
+        // 카테고리별 할인 목록 렌더링
+        function renderDiscountsByCategory(carId) {
+            const discounts = discountData[carId] || [];
+            if (discounts.length === 0) return '';
+            
+            // 카테고리별로 그룹화
+            const categories = {};
+            discounts.forEach(d => {
+                if (!categories[d.category]) categories[d.category] = [];
+                categories[d.category].push(d);
+            });
+            
+            let html = '';
+            Object.keys(categories).forEach(cat => {
+                html += `<div class="discount-category">
+                    <div class="discount-category-name">${cat}</div>
+                    ${categories[cat].map(d => `
+                        <div class="option-item discount-item">
+                            <input type="checkbox" id="${d.id}" 
+                                ${state.selectedDiscounts[d.id] ? 'checked' : ''}
+                                onchange="updateDiscountCalc(${carId})">
+                            <span class="option-name">${d.name}</span>
+                            <span class="option-price" style="color:#c62828;">-${formatPrice(d.amount)}</span>
+                        </div>
+                    `).join('')}
+                </div>`;
+            });
+            
+            return html;
+        }
+        
+        // 할인 계산 업데이트
+        function updateDiscountCalc(carId) {
+            const discounts = discountData[carId] || [];
+            let total = 0;
+            
+            discounts.forEach(d => {
+                const checkbox = document.getElementById(d.id);
+                if (checkbox && checkbox.checked) {
+                    total += d.amount;
+                    state.selectedDiscounts[d.id] = true;
+                } else {
+                    state.selectedDiscounts[d.id] = false;
+                }
+            });
+            
+            const totalEl = document.getElementById(`discount-total-${carId}`);
+            if (totalEl) totalEl.textContent = formatPrice(total);
+            
+            // 전체 계산 업데이트
+            updateCarCalc(carId);
+            saveSettings();
+        }
+        
+        // 선택된 할인 합계 계산
+        function getSelectedDiscountTotal(carId) {
+            const discounts = discountData[carId] || [];
+            let total = 0;
+            discounts.forEach(d => {
+                if (state.selectedDiscounts[d.id]) {
+                    total += d.amount;
+                }
+            });
+            return total;
+        }
+        
+        // 가격 포맷
+        function formatPrice(num) {
+            return num.toLocaleString('ko-KR');
+        }
+        
+        // 만원 단위
+        function formatPriceMan(num) {
+            return (num / 10000).toLocaleString('ko-KR') + '만';
+        }
+        
+        // 차량 카드 렌더링
+        function renderCars() {
+            const grid = document.getElementById('carGrid');
+            if (!grid) return;
+            const visibleCars = cars.filter(car => !state.hiddenCars.includes(car.id));
+            
+            grid.innerHTML = visibleCars.map(car => {
+                const isHEV = car.fuelType === 'HEV';
+                const fuelBadge = isHEV 
+                    ? `<div class="fuel-badge hev">🔋 하이브리드</div>`
+                    : `<div class="fuel-badge ev">⚡ 전기차</div>`;
+                
+                // HEV는 배기량, EV는 배터리 용량 표시
+                const powerSpec = isHEV
+                    ? `<div class="spec-row">
+                            <span class="spec-label">배기량</span>
+                            <span class="spec-value">${car.displacement ? car.displacement + 'cc' : car.specs['배기량'] || '-'}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">연료탱크</span>
+                            <span class="spec-value">${car.fuelTank ? car.fuelTank + 'ℓ' : '-'}</span>
+                        </div>`
+                    : `<div class="spec-row">
+                            <span class="spec-label">주행거리</span>
+                            <span class="spec-value ${getBestClass(cars.filter(c => c.fuelType !== 'HEV'), 'specs', '주행거리', car)}">${car.specs['주행거리']}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">배터리</span>
+                            <span class="spec-value">${car.specs['배터리 용량']}</span>
+                        </div>`;
+                
+                return `
+                <div class="car-card" data-car-id="${car.id}">
+                    <div class="car-header">
+                        <button class="hide-btn" onclick="hideCar(${car.id})" title="숨기기">✕</button>
+                        <div class="car-brand">${car.brand}</div>
+                        <div class="car-name">${car.name}</div>
+                        <div class="car-trim">${car.trim}</div>
+                        ${fuelBadge}
+                    </div>
+                    <div class="car-image">
+                        <img src="${car.image}" alt="${car.name}" onerror="this.outerHTML='<div style=\\'font-size: 4rem; opacity: 0.3;\\'>🚗</div>'">
+                    </div>
+                    <div class="car-price">
+                        <div class="price-label">차량 기본가</div>
+                        <div class="price-value">${formatPriceMan(car.price)} <small>원</small></div>
+                    </div>
+                    <div class="car-specs">
+                        <div class="spec-row">
+                            <span class="spec-label">차종</span>
+                            <span class="spec-value">${car.specs['차종']}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">복합 연비</span>
+                            <span class="spec-value ${getBestClass(cars, 'specs', '복합 연비', car)}">${car.specs['복합 연비']}</span>
+                        </div>
+                        ${powerSpec}
+                        <div class="spec-row">
+                            <span class="spec-label">공차중량</span>
+                            <span class="spec-value">${car.specs['공차중량']}</span>
+                        </div>
+                    </div>
+                    ${car.options.length > 0 ? `
+                    <div class="car-options">
+                        <div class="options-title">선택 옵션 (${car.options.length}개)</div>
+                        ${car.options.map((opt, idx) => `
+                            <div class="option-item ${idx >= 5 ? 'option-hidden' : ''}" data-car="${car.id}">
+                                <input type="checkbox" id="${opt.id}" 
+                                    ${state.selectedOptions[opt.id] ? 'checked' : ''}
+                                    onchange="updateCarCalc(${car.id})"
+                                    ${opt.subsidyChange ? 'data-subsidy-change="true"' : ''}>
+                                <span class="option-name ${opt.subsidyChange ? 'subsidy-warning' : ''}">${opt.name}</span>
+                                <span class="option-price">+${formatPrice(opt.price)}</span>
+                            </div>
+                        `).join('')}
+                        ${car.options.length > 5 ? `
+                        <button class="options-toggle" onclick="toggleOptions(${car.id})">
+                            <span id="toggle-text-${car.id}">+ ${car.options.length - 5}개 더보기</span>
+                        </button>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                    ${(discountData[car.id] && discountData[car.id].length > 0) ? `
+                    <div class="options-section">
+                        <div class="section-title" onclick="toggleDiscounts(${car.id})" style="cursor:pointer;">
+                            💰 할인 조건 <span style="font-size:11px;color:#888;" id="discount-toggle-${car.id}">▼</span>
+                        </div>
+                        <div class="discount-list" id="discount-list-${car.id}" style="display:none;">
+                            ${renderDiscountsByCategory(car.id)}
+                        </div>
+                        <div class="discount-summary" id="discount-summary-${car.id}">
+                            선택된 할인: <span id="discount-total-${car.id}">0</span>원
+                        </div>
+                    </div>
+                    ` : ''}
+                    <div class="car-result" id="result-${car.id}">
+                        <!-- 계산 결과 -->
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+        
+        // 최고/최저 값 클래스
+        function getBestClass(cars, category, key, currentCar) {
+            const values = cars.map(c => {
+                const val = c[category][key];
+                return parseFloat(val) || 0;
+            });
+            const currentVal = parseFloat(currentCar[category][key]) || 0;
+            const max = Math.max(...values);
+            const min = Math.min(...values.filter(v => v > 0));
+            
+            if (currentVal === max && max > 0) return 'best';
+            if (currentVal === min && min > 0 && key !== '공차중량') return 'worst';
+            return '';
+        }
+        
+        // 차량별 계산 업데이트
+        function updateCarCalc(carId) {
+            const car = cars.find(c => c.id === carId);
+            if (!car) return;
+            
+            const isHEV = car.fuelType === "HEV";
+            
+            // 선택된 옵션 합계 + 휠 옵션 보조금 변동 체크
+            let optionsTotal = 0;
+            let subsidyChangeOption = null;
+            
+            car.options.forEach(opt => {
+                const checkbox = document.getElementById(opt.id);
+                if (checkbox && checkbox.checked) {
+                    optionsTotal += opt.price;
+                    state.selectedOptions[opt.id] = true;
+                    
+                    // 휠 옵션으로 인한 보조금 변동 체크 (EV만 해당)
+                    if (opt.subsidyChange && !isHEV) {
+                        subsidyChangeOption = opt;
+                    }
+                } else {
+                    state.selectedOptions[opt.id] = false;
+                }
+            });
+            
+            // 차량 가격 (기본가 + 옵션 - 할인)
+            const discountTotal = getSelectedDiscountTotal(carId);
+            const vehiclePrice = car.price + optionsTotal - discountTotal;
+            
+            // 할인 총액 표시 업데이트
+            const discountTotalEl = document.getElementById(`discount-total-${carId}`);
+            if (discountTotalEl) discountTotalEl.textContent = formatPrice(discountTotal);
+            
+            // 보조금 계산 (EV만 해당)
+            let nationalSub = 0;
+            let localSub = 0;
+            let subsidyNote = '';
+            
+            if (!isHEV) {
+                // EV 보조금 적용
+                nationalSub = car.nationalSubsidy || 0;
+                localSub = car.localSubsidy || 0;
+                
+                if (subsidyChangeOption) {
+                    nationalSub = subsidyChangeOption.subsidyChange.national;
+                    localSub = subsidyChangeOption.subsidyChange.local;
+                    const diff = (car.nationalSubsidy + car.localSubsidy) - (nationalSub + localSub);
+                    subsidyNote = ` (${subsidyChangeOption.wheelSize}인치 휠 선택으로 ${formatPriceMan(diff)} 감소)`;
+                }
+            }
+            
+            const totalSubsidy = nationalSub + localSub;
+            
+            // 보조금 적용 후 가격 (실제 구매가)
+            const afterSubsidy = Math.max(0, vehiclePrice - totalSubsidy);
+            
+            // 취득세 계산 (7%) - 차량가 기준 (보조금 적용 전)
+            const taxBase = vehiclePrice;
+            let rawTax = taxBase * 0.07;
+            
+            // 감면 적용 - EV: 140만원 한도, HEV: 40만원 한도
+            let taxDiscount = 0;
+            let taxDiscountLabel = '';
+            if (isHEV) {
+                taxDiscount = Math.min(rawTax, 400000);
+                taxDiscountLabel = '하이브리드 감면 40만';
+            } else {
+                taxDiscount = Math.min(rawTax, 1400000);
+                taxDiscountLabel = '전기차 감면 140만';
+            }
+            let acquisitionTax = rawTax - taxDiscount;
+            
+            // 다자녀 감면 적용 (지방세특례제한법 제22조의3)
+            let multiChildDiscount = 0;
+            const multiChildValue = state.multiChild;
+            if (multiChildValue === "2") {
+                if (acquisitionTax <= 1400000) {
+                    multiChildDiscount = acquisitionTax * 0.5;
+                } else {
+                    multiChildDiscount = 700000;
+                }
+            } else if (multiChildValue === "3") {
+                if (acquisitionTax <= 1400000) {
+                    multiChildDiscount = acquisitionTax;
+                } else {
+                    multiChildDiscount = 1400000;
+                }
+            }
+            acquisitionTax = Math.max(0, acquisitionTax - multiChildDiscount);
+            
+            // 등록비 (채권 + 부대비용)
+            const bondDiscount = afterSubsidy * 0.05 * 0.125;
+            const miscFees = 40000;
+            const registrationTotal = acquisitionTax + bondDiscount + miscFees;
+            
+            // 총 구입비
+            const totalPurchase = afterSubsidy + registrationTotal;
+            
+            // 유지비 (연간) - EV vs HEV 분기
+            let annualFuel = 0;
+            let annualTax = 0;
+            let fuelLabel = '';
+            
+            if (isHEV) {
+                // HEV: 유류비 계산
+                const fuelEfficiency = car.fuelEfficiency || parseFloat(car.specs['복합 연비']) || 15;
+                const gasPrice = state.gasPrice || 1650;
+                annualFuel = (state.yearMileage / fuelEfficiency) * gasPrice;
+                fuelLabel = `유류비 (${gasPrice}원/ℓ)`;
+                
+                // 자동차세: 배기량 기준 (교육세 30% 포함)
+                const displacement = car.displacement || 1999;
+                let baseTax = 0;
+                if (displacement <= 1600) {
+                    baseTax = displacement * 140;
+                } else {
+                    baseTax = 1600 * 140 + (displacement - 1600) * 200;
+                }
+                annualTax = Math.round(baseTax * 1.3); // 교육세 30% 추가
+            } else {
+                // EV: 전기요금 계산
+                const efficiency = parseFloat(car.specs['복합 연비']) || 5;
+                const electricRate = 324; // 원/kWh
+                annualFuel = (state.yearMileage / efficiency) * electricRate;
+                fuelLabel = '전기요금 (324원/kWh)';
+                annualTax = 130000; // 전기차 자동차세
+            }
+            
+            const annualMaintenance = annualFuel + annualTax;
+            const totalMaintenance = annualMaintenance * state.ownershipYears;
+            
+            // 총 비용
+            const grandTotal = totalPurchase + totalMaintenance;
+            
+            // 다자녀 표시 텍스트
+            let multiChildText = '';
+            if (multiChildValue === "2") multiChildText = ' (2자녀)';
+            else if (multiChildValue === "3") multiChildText = ' (3자녀+)';
+            
+            // 결과 표시
+            const resultDiv = document.getElementById(`result-${carId}`);
+            if (!resultDiv) return; // 숨긴 차량은 스킵
+            
+            // HEV vs EV에 따라 다른 표시
+            let subsidyHtml = '';
+            if (isHEV) {
+                subsidyHtml = `
+                    <div class="subsidy-info" style="background: rgba(255, 152, 0, 0.1);">
+                        <div class="subsidy-row">
+                            <span class="subsidy-label">연료 타입</span>
+                            <span style="color: var(--warning); font-weight: 600;">🔋 하이브리드</span>
+                        </div>
+                        <div class="subsidy-row">
+                            <span class="subsidy-label">보조금</span>
+                            <span class="subsidy-value" style="color: var(--text-muted);">없음</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                subsidyHtml = `
+                    <div class="subsidy-info">
+                        <div class="subsidy-row">
+                            <span class="subsidy-label">연료 타입</span>
+                            <span style="color: var(--positive); font-weight: 600;">⚡ 전기차</span>
+                        </div>
+                        <div class="subsidy-row">
+                            <span class="subsidy-label">국고 보조금</span>
+                            <span class="subsidy-value">-${formatPriceMan(nationalSub)}</span>
+                        </div>
+                        <div class="subsidy-row">
+                            <span class="subsidy-label">지방비 (${state.region2})</span>
+                            <span class="subsidy-value">-${formatPriceMan(localSub)}</span>
+                        </div>
+                        <div class="subsidy-row" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 0.25rem;">
+                            <span class="subsidy-label"><strong>보조금 합계</strong></span>
+                            <span class="subsidy-value" style="color: var(--positive);"><strong>-${formatPriceMan(totalSubsidy)}</strong></span>
+                        </div>
+                        ${subsidyNote ? `
+                        <div class="subsidy-row" style="font-size: 0.7rem; color: var(--warning);">
+                            <span>⚠️${subsidyNote}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            resultDiv.innerHTML = `
+                ${subsidyHtml}
+                <div class="result-row">
+                    <span class="result-label">옵션 합계</span>
+                    <span class="result-value">+${formatPrice(optionsTotal)}원</span>
+                </div>
+                ${discountTotal > 0 ? `
+                <div class="result-row" style="color: var(--negative);">
+                    <span class="result-label">💰 할인 합계</span>
+                    <span class="result-value">-${formatPrice(discountTotal)}원</span>
+                </div>
+                ` : ''}
+                ${!isHEV ? `
+                <div class="result-row">
+                    <span class="result-label">보조금 적용 후</span>
+                    <span class="result-value">${formatPrice(afterSubsidy)}원</span>
+                </div>
+                ` : ''}
+                <div class="result-row">
+                    <span class="result-label">취득세 (차량가 7%)</span>
+                    <span class="result-value">${formatPrice(Math.round(rawTax))}원</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">└ ${taxDiscountLabel}</span>
+                    <span class="result-value" style="color: var(--positive);">-${formatPrice(taxDiscount)}원</span>
+                </div>
+                ${multiChildDiscount > 0 ? `
+                <div class="result-row">
+                    <span class="result-label">└ 다자녀 감면${multiChildText}</span>
+                    <span class="result-value" style="color: var(--positive);">-${formatPrice(multiChildDiscount)}원</span>
+                </div>
+                ` : ''}
+                <div class="result-row">
+                    <span class="result-label">취득세 최종</span>
+                    <span class="result-value">${formatPrice(Math.round(acquisitionTax))}원</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">등록비 합계</span>
+                    <span class="result-value">${formatPrice(Math.round(registrationTotal))}원</span>
+                </div>
+                <div class="result-row total">
+                    <span class="result-label"><strong>총 구입비</strong></span>
+                    <span class="result-value"><strong>${formatPriceMan(Math.round(totalPurchase))}원</strong></span>
+                </div>
+                <div class="result-row" style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+                    <span class="result-label">${fuelLabel}</span>
+                    <span class="result-value">${formatPrice(Math.round(annualFuel))}원/년</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">자동차세 (연)</span>
+                    <span class="result-value">${formatPrice(annualTax)}원</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">유지비 합계 (${state.ownershipYears}년)</span>
+                    <span class="result-value">${formatPriceMan(Math.round(totalMaintenance))}원</span>
+                </div>
+                <div class="result-row total" style="margin-top: 0.75rem; font-size: 1.1rem;">
+                    <span class="result-label"><strong>총 구입비</strong></span>
+                    <span class="result-value" style="color: var(--accent);"><strong>${formatPriceMan(Math.round(totalPurchase))}원</strong></span>
+                </div>
+            `;
+        }
+        
+        // 전체 계산 업데이트
+        function updateAllCalc() {
+            state.multiChild = document.getElementById('multiChild').value;
+            state.disability = document.getElementById('disability').checked;
+            state.yearMileage = parseInt(document.getElementById('yearMileage').value);
+            state.ownershipYears = parseInt(document.getElementById('ownershipYears').value);
+            
+            cars.forEach(car => updateCarCalc(car.id));
+        }
+        
+        // 보조금 업데이트
+        function updateSubsidy() {
+            state.region1 = document.getElementById('region1').value;
+            state.region2 = document.getElementById('region2').value;
+            updateAllCalc();
+        }
+        
+        // 제원 테이블 렌더링
+        function renderSpecsTable() {
+            // EV와 HEV 공통 및 전용 항목
+            const commonKeys = ['차종', '출시일', '복합 연비', '공차중량', '전장', '전폭', '전고', '축간거리', 
+                              '굴림방식', '서스펜션(전)', '서스펜션(후)', '제로백'];
+            const evKeys = ['주행거리', '배터리 용량', '모터 출력'];
+            const hevKeys = ['배기량', '연료탱크'];
+            
+            const table = document.getElementById('specsTable');
+            if (!table) return;
+            
+            // 숨긴 차량 제외
+            const visibleCars = cars.filter(c => !state.hiddenCars.includes(c.id));
+            
+            // 차량별 연료 타입 표시 (이름 아래)
+            const fuelTypeBadge = (c) => c.fuelType === 'HEV' 
+                ? '<span style="background:rgba(245,158,11,0.2);color:#f59e0b;padding:2px 6px;border-radius:4px;font-size:0.7rem;">HEV</span>'
+                : '<span style="background:rgba(0,212,170,0.2);color:#00d4aa;padding:2px 6px;border-radius:4px;font-size:0.7rem;">EV</span>';
+            
+            // 값 가져오기 (specs에서 없으면 직접 필드에서)
+            const getValue = (c, key) => {
+                if (key === '배기량' && c.displacement) return c.displacement + 'cc';
+                if (key === '연료탱크' && c.fuelTank) return c.fuelTank + 'ℓ';
+                return c.specs[key] || '-';
+            };
+            
+            table.innerHTML = `
+                <tr>
+                    <th>항목</th>
+                    ${visibleCars.map(c => `<td><strong>${c.name}</strong><br>${fuelTypeBadge(c)}<br><small>${c.trim}</small></td>`).join('')}
+                </tr>
+                ${commonKeys.slice(0, 3).map(key => `
+                    <tr>
+                        <th>${key}</th>
+                        ${visibleCars.map(c => `<td>${getValue(c, key)}</td>`).join('')}
+                    </tr>
+                `).join('')}
+                <tr>
+                    <th>주행거리 / 연료탱크</th>
+                    ${visibleCars.map(c => `<td>${c.fuelType === 'HEV' ? getValue(c, '연료탱크') : getValue(c, '주행거리')}</td>`).join('')}
+                </tr>
+                <tr>
+                    <th>배터리 / 배기량</th>
+                    ${visibleCars.map(c => `<td>${c.fuelType === 'HEV' ? getValue(c, '배기량') : getValue(c, '배터리 용량')}</td>`).join('')}
+                </tr>
+                <tr>
+                    <th>모터/엔진 출력</th>
+                    ${visibleCars.map(c => `<td>${getValue(c, '모터 출력')}</td>`).join('')}
+                </tr>
+                ${commonKeys.slice(3).map(key => `
+                    <tr>
+                        <th>${key}</th>
+                        ${visibleCars.map(c => `<td>${getValue(c, key)}</td>`).join('')}
+                    </tr>
+                `).join('')}
+            `;
+        }
+        
+        // 사양 테이블 렌더링
+        function renderFeaturesTable() {
+            const featureKeys = ['안전', '외장', '내장', '시트', '편의'];
+            
+            const table = document.getElementById('featuresTable');
+            if (!table) return;
+            
+            // 숨긴 차량 제외
+            const visibleCars = cars.filter(c => !state.hiddenCars.includes(c.id));
+            
+            table.innerHTML = `
+                <tr>
+                    <th>항목</th>
+                    ${visibleCars.map(c => `<td><strong>${c.name}</strong></td>`).join('')}
+                </tr>
+                ${featureKeys.map(key => `
+                    <tr>
+                        <th>${key}</th>
+                        ${visibleCars.map(c => `
+                            <td>
+                                <div class="features-list">
+                                    ${(c.features[key] || []).map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                                </div>
+                            </td>
+                        `).join('')}
+                    </tr>
+                `).join('')}
+            `;
+        }
+        
+        // 크기 비교 상태
+        let sizeCompareState = {
+            selected: [1, 3, 5] // 기본 선택: EV4, Model 3, 아이오닉6
+        };
+        
+        // 크기 비교 체크박스 렌더링
+        function renderSizeCheckboxes() {
+            const container = document.getElementById('sizeCheckboxes');
+            if (!container) return;
+            container.innerHTML = cars.map(car => `
+                <label class="size-checkbox-item ${sizeCompareState.selected.includes(car.id) ? 'selected' : ''}" 
+                       for="size-${car.id}" style="border-left: 4px solid ${car.color};">
+                    <input type="checkbox" id="size-${car.id}" 
+                           ${sizeCompareState.selected.includes(car.id) ? 'checked' : ''}
+                           onchange="toggleSizeCompare(${car.id})">
+                    <img src="${car.image}" alt="${car.name}" onerror="this.style.display='none'">
+                    <span class="car-label">${car.name}</span>
+                </label>
+            `).join('');
+        }
+        
+        // 크기 비교 토글
+        function toggleSizeCompare(carId) {
+            const idx = sizeCompareState.selected.indexOf(carId);
+            if (idx > -1) {
+                sizeCompareState.selected.splice(idx, 1);
+            } else {
+                sizeCompareState.selected.push(carId);
+            }
+            renderSizeCheckboxes();
+            drawSizeComparison();
+            renderSizeSpecsTable();
+        }
+        
+        // 크기 비교 캔버스 그리기
+        function drawSizeComparison() {
+            const canvas = document.getElementById('sizeCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const selectedCars = cars.filter(c => sizeCompareState.selected.includes(c.id));
+            
+            // 캔버스 초기화
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (selectedCars.length === 0) {
+                ctx.fillStyle = '#666';
+                ctx.font = '16px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('비교할 차량을 선택하세요', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+            
+            // 스케일 계산 (가장 긴 차량 기준)
+            const maxLength = Math.max(...selectedCars.map(c => c.sizeData.length));
+            const maxHeight = Math.max(...selectedCars.map(c => c.sizeData.height));
+            
+            const padding = 50;
+            const availableWidth = canvas.width - padding * 2;
+            const availableHeight = canvas.height - padding * 2 - 80; // 범례 공간
+            
+            const scaleX = availableWidth / maxLength;
+            const scaleY = availableHeight / maxHeight;
+            const scale = Math.min(scaleX, scaleY);
+            
+            // 리어 휠 센터 기준점 (오른쪽에서 계산)
+            const rearWheelX = canvas.width - padding - 100;
+            const groundY = canvas.height - padding - 60;
+            
+            // 각 차량 그리기
+            selectedCars.forEach((car, index) => {
+                const sd = car.sizeData;
+                const length = sd.length * scale;
+                const height = sd.height * scale;
+                const wheelbase = sd.wheelbase * scale;
+                const rearOverhang = sd.rearOverhang * scale;
+                
+                // 실제 휠+타이어 직경 약 700mm (17-19인치 휠 기준)
+                const wheelDiameter = 700 * scale;
+                const wheelRadius = wheelDiameter / 2;
+                
+                // 리어 휠 센터 기준으로 X 위치 계산
+                const carRight = rearWheelX + rearOverhang;
+                const carLeft = carRight - length;
+                
+                // 차체 실루엣
+                ctx.beginPath();
+                ctx.strokeStyle = car.color;
+                ctx.lineWidth = 2.5;
+                ctx.globalAlpha = 0.85;
+                
+                // 차체 높이 계산 (지상고 약 150mm 가정)
+                const groundClearance = 150 * scale;
+                const bodyBottom = groundY - groundClearance;
+                const bodyHeight = height - groundClearance;
+                
+                // 세단/SUV 구분 (전고 1550mm 이상이면 SUV 형태)
+                const isSUV = sd.height >= 1550;
+                
+                if (isSUV) {
+                    // SUV 형태
+                    const hoodEnd = carLeft + length * 0.28;
+                    const windshieldStart = carLeft + length * 0.30;
+                    const roofStart = carLeft + length * 0.38;
+                    const roofEnd = carLeft + length * 0.85;
+                    const rearWindowEnd = carLeft + length * 0.92;
+                    
+                    ctx.moveTo(carLeft, bodyBottom);
+                    ctx.lineTo(carLeft, bodyBottom - bodyHeight * 0.35); // 프론트 범퍼
+                    ctx.lineTo(hoodEnd, bodyBottom - bodyHeight * 0.40); // 후드
+                    ctx.lineTo(windshieldStart, bodyBottom - bodyHeight * 0.42);
+                    ctx.lineTo(roofStart, bodyBottom - bodyHeight * 0.95); // 윈드실드
+                    ctx.lineTo(roofEnd, bodyBottom - bodyHeight); // 루프
+                    ctx.lineTo(rearWindowEnd, bodyBottom - bodyHeight * 0.70); // 리어 윈도우
+                    ctx.lineTo(carRight, bodyBottom - bodyHeight * 0.45); // 리어
+                    ctx.lineTo(carRight, bodyBottom);
+                    ctx.closePath();
+                } else {
+                    // 세단 형태
+                    const hoodEnd = carLeft + length * 0.25;
+                    const windshieldStart = carLeft + length * 0.28;
+                    const roofStart = carLeft + length * 0.35;
+                    const roofEnd = carLeft + length * 0.72;
+                    const rearWindowEnd = carLeft + length * 0.82;
+                    const trunkEnd = carLeft + length * 0.95;
+                    
+                    ctx.moveTo(carLeft, bodyBottom);
+                    ctx.lineTo(carLeft, bodyBottom - bodyHeight * 0.30);
+                    ctx.lineTo(hoodEnd, bodyBottom - bodyHeight * 0.35); // 후드
+                    ctx.lineTo(windshieldStart, bodyBottom - bodyHeight * 0.38);
+                    ctx.lineTo(roofStart, bodyBottom - bodyHeight * 0.92); // 윈드실드
+                    ctx.lineTo(roofEnd, bodyBottom - bodyHeight); // 루프
+                    ctx.lineTo(rearWindowEnd, bodyBottom - bodyHeight * 0.65); // 리어 윈도우
+                    ctx.lineTo(trunkEnd, bodyBottom - bodyHeight * 0.40); // 트렁크
+                    ctx.lineTo(carRight, bodyBottom - bodyHeight * 0.35);
+                    ctx.lineTo(carRight, bodyBottom);
+                    ctx.closePath();
+                }
+                ctx.stroke();
+                
+                // 휠 (리어) - 실제 비율
+                ctx.beginPath();
+                ctx.arc(rearWheelX, groundY - wheelRadius, wheelRadius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // 휠 (프론트) - 실제 비율
+                const frontWheelX = rearWheelX - wheelbase;
+                ctx.beginPath();
+                ctx.arc(frontWheelX, groundY - wheelRadius, wheelRadius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // 휠베이스 표시선
+                ctx.setLineDash([3, 3]);
+                ctx.globalAlpha = 0.4;
+                ctx.beginPath();
+                ctx.moveTo(frontWheelX, groundY + 15);
+                ctx.lineTo(rearWheelX, groundY + 15);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 0.85;
+            });
+            
+            // 리어 휠 센터 기준선
+            ctx.strokeStyle = '#FF5722';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(rearWheelX, groundY - maxHeight * scale - 20);
+            ctx.lineTo(rearWheelX, groundY + 40);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // 기준선 라벨
+            ctx.fillStyle = '#FF5722';
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('리어 휠 센터', rearWheelX, groundY + 55);
+            
+            ctx.globalAlpha = 1;
+            
+            // 범례 렌더링
+            renderSizeLegend(selectedCars);
+        }
+        
+        // 크기 비교 범례 렌더링
+        function renderSizeLegend(selectedCars) {
+            const container = document.getElementById('sizeLegend');
+            if (!container) return;
+            container.innerHTML = selectedCars.map(car => `
+                <div class="legend-item">
+                    <div class="legend-color" style="background: ${car.color};"></div>
+                    <span>${car.name} (${car.sizeData.length}mm)</span>
+                </div>
+            `).join('');
+        }
+        
+        // 크기 제원 테이블 렌더링
+        function renderSizeSpecsTable() {
+            const selectedCars = cars.filter(c => sizeCompareState.selected.includes(c.id));
+            const table = document.getElementById('sizeSpecsTable');
+            if (!table) return;
+            
+            if (selectedCars.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">비교할 차량을 선택하세요</td></tr>';
+                return;
+            }
+            
+            // 값 비교를 위한 헬퍼
+            const getMax = (key) => Math.max(...selectedCars.map(c => c.sizeData[key]));
+            const getMin = (key) => Math.min(...selectedCars.map(c => c.sizeData[key]));
+            
+            table.innerHTML = `
+                <tr>
+                    <th>항목</th>
+                    ${selectedCars.map(c => `
+                        <td style="border-top: 3px solid ${c.color};">
+                            <strong>${c.name}</strong>
+                        </td>
+                    `).join('')}
+                </tr>
+                <tr>
+                    <th>전장</th>
+                    ${selectedCars.map(c => {
+                        const isMax = c.sizeData.length === getMax('length');
+                        const isMin = c.sizeData.length === getMin('length');
+                        return `<td class="${isMax ? 'best' : isMin ? 'worst' : ''}">${c.sizeData.length.toLocaleString()} mm</td>`;
+                    }).join('')}
+                </tr>
+                <tr>
+                    <th>전폭</th>
+                    ${selectedCars.map(c => {
+                        const isMax = c.sizeData.width === getMax('width');
+                        const isMin = c.sizeData.width === getMin('width');
+                        return `<td class="${isMax ? 'best' : isMin ? 'worst' : ''}">${c.sizeData.width.toLocaleString()} mm</td>`;
+                    }).join('')}
+                </tr>
+                <tr>
+                    <th>전고</th>
+                    ${selectedCars.map(c => {
+                        const isMax = c.sizeData.height === getMax('height');
+                        const isMin = c.sizeData.height === getMin('height');
+                        return `<td class="${isMax ? 'best' : isMin ? 'worst' : ''}">${c.sizeData.height.toLocaleString()} mm</td>`;
+                    }).join('')}
+                </tr>
+                <tr>
+                    <th>축간거리</th>
+                    ${selectedCars.map(c => {
+                        const isMax = c.sizeData.wheelbase === getMax('wheelbase');
+                        const isMin = c.sizeData.wheelbase === getMin('wheelbase');
+                        return `<td class="${isMax ? 'best' : isMin ? 'worst' : ''}">${c.sizeData.wheelbase.toLocaleString()} mm</td>`;
+                    }).join('')}
+                </tr>
+                <tr>
+                    <th>리어 오버행</th>
+                    ${selectedCars.map(c => `<td>${c.sizeData.rearOverhang.toLocaleString()} mm</td>`).join('')}
+                </tr>
+            `;
+        }
+        
+        // 페이지 로드 시 초기화
+        function init() {
+            loadSettings();
+            renderCars();
+            renderSpecsTable();
+            renderFeaturesTable();
+            renderSizeCheckboxes();
+            drawSizeComparison();
+            renderSizeSpecsTable();
+            cars.forEach(car => updateCarCalc(car.id));
+        }
+        
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // 페이지 떠날 때 자동 저장
+        window.addEventListener('beforeunload', saveSettings);
+    </script>
+</body>
+</html>
