@@ -309,14 +309,50 @@
             color: #000;
         }
         
-        /* Hide Button */
-        .hide-btn {
+        /* Card Controls */
+        .card-controls {
             position: absolute;
             top: 0.5rem;
             right: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .car-card:hover .card-controls {
+            opacity: 1;
+        }
+        
+        .move-btn {
             width: 24px;
             height: 24px;
-            border-radius: 50%;
+            border-radius: 4px;
+            border: none;
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--accent);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            transition: all 0.2s;
+        }
+        
+        .move-btn:hover:not(.disabled) {
+            background: var(--accent);
+            color: var(--bg);
+        }
+        
+        .move-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .hide-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
             border: none;
             background: rgba(255,255,255,0.1);
             color: var(--text-muted);
@@ -326,11 +362,6 @@
             justify-content: center;
             font-size: 0.75rem;
             transition: all 0.2s;
-            opacity: 0;
-        }
-        
-        .car-card:hover .hide-btn {
-            opacity: 1;
         }
         
         .hide-btn:hover {
@@ -1735,18 +1766,37 @@
             gasPrice: 1650,
             selectedOptions: {},
             selectedDiscounts: {},  // 선택된 할인 조건
-            hiddenCars: []  // 숨긴 차량 ID 배열
+            hiddenCars: [],  // 숨긴 차량 ID 배열
+            carOrder: []  // 차량 표시 순서 (ID 배열)
         };
         
         // 초기화
         function init() {
             loadSettings();
+            initCarOrder();
             renderCars();
             renderHiddenCars();
             renderSpecsTable();
             renderFeaturesTable();
             renderSizeCheckboxes();
             updateAllCalc();
+        }
+        
+        // 차량 순서 초기화
+        function initCarOrder() {
+            // carOrder가 없거나 유효하지 않으면 기본 순서 사용
+            if (!state.carOrder || !Array.isArray(state.carOrder) || state.carOrder.length === 0) {
+                state.carOrder = cars.map(c => c.id);
+                return;
+            }
+            // 새로 추가된 차량이 있으면 맨 뒤에 추가
+            cars.forEach(c => {
+                if (!state.carOrder.includes(c.id)) {
+                    state.carOrder.push(c.id);
+                }
+            });
+            // 삭제된 차량 ID 제거
+            state.carOrder = state.carOrder.filter(id => cars.some(c => c.id === id));
         }
         
         // 설정 로드
@@ -1828,14 +1878,64 @@
             }
         }
         
-        // 차량 보이기
+        // 차량 보이기 (순서 맨 뒤로)
         function showCar(carId) {
             state.hiddenCars = state.hiddenCars.filter(id => id !== carId);
+            
+            // 순서 맨 뒤로 이동
+            state.carOrder = state.carOrder.filter(id => id !== carId);
+            state.carOrder.push(carId);
+            
             renderCars();
             renderHiddenCars();
             renderSpecsTable();
             renderFeaturesTable();
             updateAllCalc();
+            saveSettings();
+        }
+        
+        // 차량 왼쪽으로 이동
+        function moveCarLeft(carId) {
+            const visibleOrder = state.carOrder.filter(id => !state.hiddenCars.includes(id));
+            const idx = visibleOrder.indexOf(carId);
+            if (idx <= 0) return;
+            
+            // 전체 순서에서 위치 찾기
+            const fullIdx = state.carOrder.indexOf(carId);
+            const prevVisibleId = visibleOrder[idx - 1];
+            const prevFullIdx = state.carOrder.indexOf(prevVisibleId);
+            
+            // 스왑
+            state.carOrder[fullIdx] = prevVisibleId;
+            state.carOrder[prevFullIdx] = carId;
+            
+            renderCars();
+            renderSpecsTable();
+            renderFeaturesTable();
+            updateAllCalc();
+            saveSettings();
+        }
+        
+        // 차량 오른쪽으로 이동
+        function moveCarRight(carId) {
+            const visibleOrder = state.carOrder.filter(id => !state.hiddenCars.includes(id));
+            const idx = visibleOrder.indexOf(carId);
+            if (idx < 0 || idx >= visibleOrder.length - 1) return;
+            
+            // 전체 순서에서 위치 찾기
+            const fullIdx = state.carOrder.indexOf(carId);
+            const nextVisibleId = visibleOrder[idx + 1];
+            const nextFullIdx = state.carOrder.indexOf(nextVisibleId);
+            
+            // 스왑
+            state.carOrder[fullIdx] = nextVisibleId;
+            state.carOrder[nextFullIdx] = carId;
+            
+            renderCars();
+            renderSpecsTable();
+            renderFeaturesTable();
+            updateAllCalc();
+            saveSettings();
         }
         
         // 숨긴 차량 아이콘 렌더링
@@ -1989,13 +2089,25 @@
         function renderCars() {
             const grid = document.getElementById('carGrid');
             if (!grid) return;
-            const visibleCars = cars.filter(car => !state.hiddenCars.includes(car.id));
             
-            grid.innerHTML = visibleCars.map(car => {
+            // carOrder가 비어있으면 기본 순서로
+            if (!state.carOrder || state.carOrder.length === 0) {
+                state.carOrder = cars.map(c => c.id);
+            }
+            
+            // carOrder 기준으로 정렬된 보이는 차량
+            const visibleOrder = state.carOrder.filter(id => !state.hiddenCars.includes(id));
+            const visibleCars = visibleOrder.map(id => cars.find(c => c.id === id)).filter(Boolean);
+            
+            grid.innerHTML = visibleCars.map((car, idx) => {
                 const isHEV = car.fuelType === 'HEV';
                 const fuelBadge = isHEV 
                     ? `<div class="fuel-badge hev">🔋 하이브리드</div>`
                     : `<div class="fuel-badge ev">⚡ 전기차</div>`;
+                
+                // 이동 버튼 (첫번째면 왼쪽 비활성, 마지막이면 오른쪽 비활성)
+                const isFirst = idx === 0;
+                const isLast = idx === visibleCars.length - 1;
                 
                 // HEV는 배기량, EV는 배터리 용량 표시
                 const powerSpec = isHEV
@@ -2019,7 +2131,11 @@
                 return `
                 <div class="car-card" data-car-id="${car.id}">
                     <div class="car-header">
-                        <button class="hide-btn" onclick="hideCar(${car.id})" title="숨기기">✕</button>
+                        <div class="card-controls">
+                            <button class="move-btn ${isFirst ? 'disabled' : ''}" onclick="moveCarLeft(${car.id})" title="왼쪽으로" ${isFirst ? 'disabled' : ''}>◀</button>
+                            <button class="move-btn ${isLast ? 'disabled' : ''}" onclick="moveCarRight(${car.id})" title="오른쪽으로" ${isLast ? 'disabled' : ''}>▶</button>
+                            <button class="hide-btn" onclick="hideCar(${car.id})" title="숨기기">✕</button>
+                        </div>
                         <div class="car-brand">${car.brand}</div>
                         <div class="car-name">${car.name}</div>
                         <div class="car-trim">${car.trim}</div>
@@ -2381,8 +2497,14 @@
             const table = document.getElementById('specsTable');
             if (!table) return;
             
-            // 숨긴 차량 제외
-            const visibleCars = cars.filter(c => !state.hiddenCars.includes(c.id));
+            // carOrder가 비어있으면 기본 순서로
+            if (!state.carOrder || state.carOrder.length === 0) {
+                state.carOrder = cars.map(c => c.id);
+            }
+            
+            // carOrder 기준으로 정렬된 보이는 차량
+            const visibleOrder = state.carOrder.filter(id => !state.hiddenCars.includes(id));
+            const visibleCars = visibleOrder.map(id => cars.find(c => c.id === id)).filter(Boolean);
             
             // 차량별 연료 타입 표시 (이름 아래)
             const fuelTypeBadge = (c) => c.fuelType === 'HEV' 
@@ -2435,8 +2557,14 @@
             const table = document.getElementById('featuresTable');
             if (!table) return;
             
-            // 숨긴 차량 제외
-            const visibleCars = cars.filter(c => !state.hiddenCars.includes(c.id));
+            // carOrder가 비어있으면 기본 순서로
+            if (!state.carOrder || state.carOrder.length === 0) {
+                state.carOrder = cars.map(c => c.id);
+            }
+            
+            // carOrder 기준으로 정렬된 보이는 차량
+            const visibleOrder = state.carOrder.filter(id => !state.hiddenCars.includes(id));
+            const visibleCars = visibleOrder.map(id => cars.find(c => c.id === id)).filter(Boolean);
             
             table.innerHTML = `
                 <tr>
